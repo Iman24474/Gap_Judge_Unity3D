@@ -4,26 +4,28 @@ using UnityEngine;
 
 public class Headset : MonoBehaviour
 {
-    [HideInInspector] public List<float> HeadXPos = new List<float>();
-    [HideInInspector] public List<float> HeadYPos = new List<float>();
-    [HideInInspector] public List<float> HeadZPos = new List<float>();
-    [HideInInspector] public List<float> HeadXRot = new List<float>();
-    [HideInInspector] public List<float> HeadYRot = new List<float>();
-    [HideInInspector] public List<float> HeadZRot = new List<float>();
-    [HideInInspector] public List<float> TotalTime = new List<float>();
+    CarSpawner carSpawner;
+    const float headStatus = 0;
+    [HideInInspector] public Dictionary<float, List<float>> HeadRecord = new Dictionary<float, List<float>>();
 
+    void Start()
+    {
+        carSpawner = GameObject.Find("Car Spawner").GetComponent<CarSpawner>();
+    }
     // Update is called once per frame
     void Update()
     {
-        HeadXPos.Add(Camera.main.transform.position.x);
-        HeadYPos.Add(Camera.main.transform.position.y);
-        HeadZPos.Add(Camera.main.transform.position.z);
-        
-        HeadXRot.Add(Camera.main.transform.eulerAngles.x);
-        HeadYRot.Add(Camera.main.transform.eulerAngles.y);
-        HeadZRot.Add(Camera.main.transform.eulerAngles.z);
-
-        TotalTime.Add(Time.time);
+        // Head data recording
+        HeadRecord.Add(carSpawner.elapsedTime, new List<float>()
+        {
+            headStatus, // 0
+            Camera.main.transform.position.x, // X-Pos
+            Camera.main.transform.position.y, // Y-Pos
+            Camera.main.transform.position.z, // Z-Pos
+            Camera.main.transform.eulerAngles.x, // X-Rot
+            Camera.main.transform.eulerAngles.y, // Y-Rot
+            Camera.main.transform.eulerAngles.z // Z-Rot
+        });
 
     }
 }

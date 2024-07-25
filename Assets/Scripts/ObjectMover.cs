@@ -6,12 +6,14 @@ public class ObjectMover : MonoBehaviour
 {
     const float speed = 11.176f;
     const float endPoint = 125f;
-    const float destroyPoint = -10f;
+    const float midPoint = 0f;
     CarSpawner carSpawner;
+    ResponseAnalyzer responseAnalyzer;
     // Start is called before the first frame update
     void Start()
     {
         carSpawner = GameObject.Find("Car Spawner").GetComponent<CarSpawner>();
+        responseAnalyzer = GameObject.Find("XR Origin (XR Rig)").GetComponent<ResponseAnalyzer>();
     }
 
     // Update is called once per frame
@@ -24,24 +26,36 @@ public class ObjectMover : MonoBehaviour
             Destroy(gameObject);
         }
 
-        else if(gameObject.transform.position.x <= destroyPoint)
+        else if(gameObject.tag == "DestroyedCar")
         {
-            if(carSpawner.rightTriggerPressed)
-            {
-                Destroy(gameObject);
-
-                if(carSpawner.trialNum == carSpawner.trialCount)
-                {
-                    carSpawner.newTrial = false;
-                }
-                else
-                {
-                    // start a new trial
-                    carSpawner.newTrial = true;
-                }
-            }
-
+            Destroy(gameObject);
         }
+
+        else if(gameObject.tag == "TailCar" && gameObject.transform.position.x >= midPoint)
+        {
+            responseAnalyzer.timingEnded = false;
+            responseAnalyzer.timingInitiated = false;
+            responseAnalyzer.tagged = false;
+        }
+
+        // else if(gameObject.transform.position.x <= destroyPoint)
+        // {
+        //     if(carSpawner.rightTriggerPressed)
+        //     {
+        //         Destroy(gameObject);
+
+        //         if(carSpawner.trialNum == carSpawner.trialCount)
+        //         {
+        //             carSpawner.newTrial = false;
+        //         }
+        //         else
+        //         {
+        //             // start a new trial
+        //             carSpawner.newTrial = true;
+        //         }
+        //     }
+
+        // }
 
     }
 }

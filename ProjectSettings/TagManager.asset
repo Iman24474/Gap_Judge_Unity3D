@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Car
   - VW
+  - TailCar
+  - LeadCar
+  - DestroyedCar
+  - ClonedCar
   layers:
   - Default
   - TransparentFX

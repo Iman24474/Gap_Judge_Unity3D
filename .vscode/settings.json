@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "GapJudge-2024.sln"
+    "dotnet.defaultSolution": "Gap_Judge_Unity3D.sln"
 }

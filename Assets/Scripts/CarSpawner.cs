@@ -21,20 +21,23 @@ public class CarSpawner : MonoBehaviour
     float waitTime;
     float customTime;
     float timeReset;
+    [HideInInspector] public float elapsedTime;
     [HideInInspector] public GameObject pinkCar;
-    [HideInInspector] public int trialNum;
+    [HideInInspector] public float trialNum;
 
     [HideInInspector] public List<int> carEntityId = new List<int>();
 	[HideInInspector] public List<float> carSize = new List<float>();
 	[HideInInspector] public List<float> carCreationTime = new List<float>();
 	[HideInInspector] public List<Vector3> carPosition = new List<Vector3>();
 	[HideInInspector] public List<float> gapTime = new List<float>();
+    ResponseAnalyzer responseAnalyzer;
 
 
     // Start is called before the first frame update
     void Start()
     {
         playerRight = new HapticClipPlayer(hapticClip);
+        responseAnalyzer = GameObject.Find("XR Origin (XR Rig)").GetComponent<ResponseAnalyzer>();
         delay = carCreationDelay;
 
     }
@@ -45,6 +48,7 @@ public class CarSpawner : MonoBehaviour
         OVRInput.Update();
         customTime += Time.deltaTime;
         delay -= Time.deltaTime;
+        elapsedTime += Time.deltaTime;
 
         if(Input.GetKeyDown(KeyCode.S) || newTrial)
         {
@@ -57,7 +61,7 @@ public class CarSpawner : MonoBehaviour
             // if the pink car has passed the center point and  the trigger button is pressed
             if(pinkCar.transform.position.x >= 0)
             {
-                if(OVRInput.Get(OVRInput.RawButton.RIndexTrigger) && !rightTriggerPressed)
+                if((OVRInput.Get(OVRInput.RawButton.RIndexTrigger) || Input.GetKeyDown(KeyCode.Space)) && !rightTriggerPressed)
                 {
                     //haptic feedback
                     playerRight.Play(Controller.Right);
@@ -111,11 +115,16 @@ public class CarSpawner : MonoBehaviour
             newTrial = true;
             rightTriggerPressed = false;
 
+            // Increment the car entity ID
+            selectedPrefab.GetComponent<CarEntity>().entityID++;
+            //Set the intantiated car's tag to "ClonedCar"
+            pinkCar.tag = "ClonedCar";
+
         }
 
         else if(customTime >= waitTime)
         {
-            Instantiate(selectedPrefab, new Vector3(-125f, 0, 0), Quaternion.Euler(-90, 90, 0));
+            GameObject obj = Instantiate(selectedPrefab, new Vector3(-125f, 0, 0), Quaternion.Euler(-90, 90, 0));
 
             // Resest the timer
             timeReset = customTime;
@@ -123,6 +132,11 @@ public class CarSpawner : MonoBehaviour
 
             // Select the next gap size
             waitTime = gaps[Random.Range(0, gaps.Length)];
+
+            // Increment the car entity ID
+            selectedPrefab.GetComponent<CarEntity>().entityID++;  
+            //Set the intantiated car's tag to "ClonedCar" 
+            obj.tag = "ClonedCar";
 
         } 
        
