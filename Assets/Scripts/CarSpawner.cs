@@ -58,10 +58,9 @@ public class CarSpawner : MonoBehaviour
             }
             
 
-            // if the pink car has passed the center point and  the trigger button is pressed
-            if(pinkCar.transform.position.x >= 0)
+            if(pinkCar == null)
             {
-                if((OVRInput.Get(OVRInput.RawButton.RIndexTrigger) || Input.GetKeyDown(KeyCode.Space)) && !rightTriggerPressed)
+                if((OVRInput.Get(OVRInput.RawButton.RIndexTrigger) || Input.GetKeyDown(KeyCode.P)) && !rightTriggerPressed)
                 {
                     //haptic feedback
                     playerRight.Play(Controller.Right);
@@ -71,8 +70,23 @@ public class CarSpawner : MonoBehaviour
                     rightTriggerPressed = true;
                     firstCar = true;
                     delay = carCreationDelay;
-                }    
+                }
             }
+            else if(pinkCar != null && pinkCar.transform.position.x >= 0)
+            {
+                if((OVRInput.Get(OVRInput.RawButton.RIndexTrigger) || Input.GetKeyDown(KeyCode.P)) && !rightTriggerPressed)
+                {
+                    //haptic feedback
+                    playerRight.Play(Controller.Right);
+
+                    trialNum++;
+
+                    rightTriggerPressed = true;
+                    firstCar = true;
+                    delay = carCreationDelay;
+                }
+            }
+
 
             
 

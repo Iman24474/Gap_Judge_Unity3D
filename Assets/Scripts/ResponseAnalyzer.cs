@@ -4,10 +4,19 @@ using UnityEngine;
 
 public class ResponseAnalyzer : MonoBehaviour
 {
+    float leadGapRT;
+    float timeToSpare;
+    float btnPressed;
+    float btnReleased;
     CarSpawner carSpawner;
     [HideInInspector] public bool tagged;
     [HideInInspector] public bool timingInitiated;
     [HideInInspector] public bool timingEnded;
+    [HideInInspector] public List<float> gapsGeneratedRounded = new List<float>();   
+    [HideInInspector] public List<float> gapsGeneratedActual = new List<float>();  
+    [HideInInspector] public Dictionary<float, List<float>> ResponseAnalysis = new Dictionary<float,List<float>>();
+    [HideInInspector] public Dictionary<float, List<float>> GapsSeenRounded = new Dictionary<float,List<float>>();
+    [HideInInspector] public Dictionary<float, List<float>> GapsSeenActual = new Dictionary<float,List<float>>(); 
     // Start is called before the first frame update
     void Start()
     {
@@ -17,19 +26,67 @@ public class ResponseAnalyzer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         TagCars();
-        Debug.Log("Tagged: " + tagged);
-        Debug.Log("Initiated: " + timingInitiated);
-        Debug.Log("Ended: " + timingEnded);
-        if (tagged && !timingInitiated && Input.GetKey(KeyCode.Space))
+
+        GameObject leadCar = GameObject.FindWithTag("LeadCar");
+        GameObject tailCar = GameObject.FindWithTag("TailCar");
+        float headZ = Camera.main.transform.position.z;
+        float headX = Camera.main.transform.position.x;
+
+        if (tagged && !timingInitiated && Input.GetKeyDown(KeyCode.P))
         {
-            Debug.Log("Time of Entry: " + LeadGapReactionTimeCalculation());
+
+            float leadCarX = leadCar.transform.position.x;
+            float tailCarX = tailCar.transform.position.x;
+            float leadCarSize = leadCar.GetComponent<CarEntity>().carSize;
+            float tailCarSize = tailCar.GetComponent<CarEntity>().carSize;
+
+            leadGapRT = LeadGapReactionTimeCalculation();
+            btnPressed = carSpawner.elapsedTime;
+
+            ResponseAnalysis.Add(carSpawner.trialNum, new List<float>()
+            {
+                btnPressed,
+                headX,
+                headZ,
+                leadCarX,
+                leadCarSize,
+                tailCarX,
+                tailCarSize,
+                leadGapRT
+            });
+
+            GapsSeenRounded.Add(carSpawner.trialNum, gapsGeneratedRounded);
+            ActualGapsSeenCalculator();
+            GapsSeenActual.Add(carSpawner.trialNum, gapsGeneratedActual);
+
+            gapsGeneratedRounded = new List<float>();
+            gapsGeneratedActual = new List<float>();
             timingInitiated = true;
         }
 
-        if(tagged && !timingEnded && Input.GetKeyUp(KeyCode.Space))
+        if(tagged && !timingEnded && Input.GetKeyUp(KeyCode.P))
         {
-            Debug.Log("Time to Spare: " + TimeToSpareCalculation());
+            float leadCarX = leadCar.transform.position.x;
+            float tailCarX = tailCar.transform.position.x;
+            float leadCarSize = leadCar.GetComponent<CarEntity>().carSize;
+            float tailCarSize = tailCar.GetComponent<CarEntity>().carSize;
+
+            timeToSpare = TimeToSpareCalculation();
+            btnReleased = carSpawner.elapsedTime;
+            float btnHoldTime = btnReleased - btnPressed;
+
+            ResponseAnalysis[carSpawner.trialNum].Add(btnReleased);
+            ResponseAnalysis[carSpawner.trialNum].Add(headX);
+            ResponseAnalysis[carSpawner.trialNum].Add(headZ);
+            ResponseAnalysis[carSpawner.trialNum].Add(leadCarX);
+            ResponseAnalysis[carSpawner.trialNum].Add(leadCarSize);
+            ResponseAnalysis[carSpawner.trialNum].Add(tailCarX);
+            ResponseAnalysis[carSpawner.trialNum].Add(tailCarSize);
+            ResponseAnalysis[carSpawner.trialNum].Add(timeToSpare);
+            ResponseAnalysis[carSpawner.trialNum].Add(btnHoldTime);
+
             timingEnded = true;
         }
     }
@@ -114,6 +171,15 @@ public class ResponseAnalyzer : MonoBehaviour
         float headToTailDist = headX - tailCarFrontBumper;
         float distTime = headToTailDist / carSpeed;
         return distTime;
+    }
+
+    void ActualGapsSeenCalculator()
+    {
+        for(int i=1; i < gapsGeneratedActual.Count; i++)
+        {
+            gapsGeneratedActual[i-1] = gapsGeneratedActual[i] - gapsGeneratedActual[i-1];
+        }
+        gapsGeneratedActual.RemoveRange(gapsGeneratedRounded.Count, gapsGeneratedActual.Count - gapsGeneratedRounded.Count);
     }
 
 

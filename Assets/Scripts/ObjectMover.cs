@@ -33,29 +33,21 @@ public class ObjectMover : MonoBehaviour
 
         else if(gameObject.tag == "TailCar" && gameObject.transform.position.x >= midPoint)
         {
+            gameObject.tag = "ClonedCar";
             responseAnalyzer.timingEnded = false;
             responseAnalyzer.timingInitiated = false;
             responseAnalyzer.tagged = false;
         }
 
-        // else if(gameObject.transform.position.x <= destroyPoint)
-        // {
-        //     if(carSpawner.rightTriggerPressed)
-        //     {
-        //         Destroy(gameObject);
-
-        //         if(carSpawner.trialNum == carSpawner.trialCount)
-        //         {
-        //             carSpawner.newTrial = false;
-        //         }
-        //         else
-        //         {
-        //             // start a new trial
-        //             carSpawner.newTrial = true;
-        //         }
-        //     }
-
-        // }
+        if(carSpawner.trialNum == carSpawner.trialCount)
+        {
+            carSpawner.newTrial = false;
+        }
+        else
+        {
+            // start a new trial
+            carSpawner.newTrial = true;
+        }
 
     }
 }
