@@ -9,6 +9,7 @@ public class ResponseAnalyzer : MonoBehaviour
     float btnPressed;
     float btnReleased;
     CarSpawner carSpawner;
+    [HideInInspector] public float btnState;
     [HideInInspector] public bool tagged;
     [HideInInspector] public bool timingInitiated;
     [HideInInspector] public bool timingEnded;
@@ -36,6 +37,7 @@ public class ResponseAnalyzer : MonoBehaviour
 
         if (tagged && !timingInitiated && Input.GetKeyDown(KeyCode.P))
         {
+            btnState = 1; // meaning btn is pressed (initial state)
 
             float leadCarX = leadCar.transform.position.x;
             float tailCarX = tailCar.transform.position.x;
@@ -66,8 +68,15 @@ public class ResponseAnalyzer : MonoBehaviour
             timingInitiated = true;
         }
 
+        if(timingInitiated && !timingEnded)
+        {
+            btnState = 2; // meaning btn is kept pressed down (intermediate state)
+        }
+
         if(tagged && !timingEnded && Input.GetKeyUp(KeyCode.P))
         {
+            btnState = 3; // meaning btn is released (final state)
+
             float leadCarX = leadCar.transform.position.x;
             float tailCarX = tailCar.transform.position.x;
             float leadCarSize = leadCar.GetComponent<CarEntity>().carSize;
@@ -88,6 +97,11 @@ public class ResponseAnalyzer : MonoBehaviour
             ResponseAnalysis[carSpawner.trialNum].Add(btnHoldTime);
 
             timingEnded = true;
+        }
+
+        if(timingInitiated && timingEnded)
+        {
+            btnState = 0; // Reset btn state
         }
     }
 

@@ -19,6 +19,7 @@ public class Headset : MonoBehaviour
         HeadRecord.Add(carSpawner.elapsedTime, new List<float>()
         {
             headStatus, // 0
+            carSpawner.trialNum, // trial number
             Camera.main.transform.position.x, // X-Pos
             Camera.main.transform.position.y, // Y-Pos
             Camera.main.transform.position.z, // Z-Pos

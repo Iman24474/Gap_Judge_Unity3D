@@ -598,6 +598,7 @@
 "Assets/Oculus/SampleFramework/Usage/TouchPro/Scripts/Ui/UiVectorInspector.cs"
 "Assets/Samples/Meta XR Haptics SDK/1.0.0-beta.7/Minimal Integration Example/Scripts/HapticsSdkGuidance.cs"
 "Assets/Samples/Meta XR Haptics SDK/1.0.0-beta.7/Minimal Integration Example/Scripts/HapticsSdkPlaySample.cs"
+"Assets/Scripts/Analysis_Output.cs"
 "Assets/Scripts/CarEntity.cs"
 "Assets/Scripts/CarSpawner.cs"
 "Assets/Scripts/CSV_Output.cs"

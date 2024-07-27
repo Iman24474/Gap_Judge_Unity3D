@@ -18,18 +18,15 @@ public class CarSpawner : MonoBehaviour
     [HideInInspector] public bool newTrial = false;
     bool activeResponse;
     [HideInInspector] public bool rightTriggerPressed;
-    float waitTime;
+    [HideInInspector] public float waitTime;
     float customTime;
     float timeReset;
+    [HideInInspector] public bool isPink;
     [HideInInspector] public float elapsedTime;
     [HideInInspector] public GameObject pinkCar;
     [HideInInspector] public float trialNum;
 
-    [HideInInspector] public List<int> carEntityId = new List<int>();
-	[HideInInspector] public List<float> carSize = new List<float>();
-	[HideInInspector] public List<float> carCreationTime = new List<float>();
-	[HideInInspector] public List<Vector3> carPosition = new List<Vector3>();
-	[HideInInspector] public List<float> gapTime = new List<float>();
+    [HideInInspector] public Dictionary<float, List<List<float>>> CarInfo = new Dictionary<float, List<List<float>>>();
     ResponseAnalyzer responseAnalyzer;
 
 
@@ -87,13 +84,7 @@ public class CarSpawner : MonoBehaviour
                 }
             }
 
-
-            
-
         }
-        
-        
-
 
     }
 
