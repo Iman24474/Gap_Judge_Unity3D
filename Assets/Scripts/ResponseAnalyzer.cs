@@ -27,6 +27,7 @@ public class ResponseAnalyzer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        OVRInput.Update();
 
         TagCars();
 
@@ -35,7 +36,17 @@ public class ResponseAnalyzer : MonoBehaviour
         float headZ = Camera.main.transform.position.z;
         float headX = Camera.main.transform.position.x;
 
-        if (tagged && !timingInitiated && Input.GetKeyDown(KeyCode.P))
+        if(timingInitiated && timingEnded)
+        {
+            btnState = 0; // Reset btn state
+        }
+        
+        if(timingInitiated && !timingEnded)
+        {
+            btnState = 2; // meaning btn is kept pressed down (intermediate state)
+        }
+
+        if (tagged && !timingInitiated && (Input.GetKeyDown(KeyCode.P) || OVRInput.Get(OVRInput.RawButton.RIndexTrigger)))
         {
             btnState = 1; // meaning btn is pressed (initial state)
 
@@ -68,12 +79,7 @@ public class ResponseAnalyzer : MonoBehaviour
             timingInitiated = true;
         }
 
-        if(timingInitiated && !timingEnded)
-        {
-            btnState = 2; // meaning btn is kept pressed down (intermediate state)
-        }
-
-        if(tagged && !timingEnded && Input.GetKeyUp(KeyCode.P))
+        if(tagged && !timingEnded && (Input.GetKeyUp(KeyCode.P) || OVRInput.GetUp(OVRInput.RawButton.RIndexTrigger)))
         {
             btnState = 3; // meaning btn is released (final state)
 
@@ -99,15 +105,10 @@ public class ResponseAnalyzer : MonoBehaviour
             timingEnded = true;
         }
 
-        if(timingInitiated && timingEnded)
-        {
-            btnState = 0; // Reset btn state
-        }
     }
 
     void TagCars()
     {
-        float headZ = Camera.main.transform.position.z;
         float headX = Camera.main.transform.position.x;
         // Find all game objects with the tag "ClonedCar"
         GameObject[] clonedCars = GameObject.FindGameObjectsWithTag("ClonedCar");

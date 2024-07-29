@@ -118,7 +118,6 @@ public class CarSpawner : MonoBehaviour
 
             firstCar = false;
             newTrial = true;
-            rightTriggerPressed = false;
 
             // Increment the car entity ID
             selectedPrefab.GetComponent<CarEntity>().entityID++;

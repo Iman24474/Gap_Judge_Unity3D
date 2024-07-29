@@ -8,23 +8,28 @@ using UnityEngine;
 public class Analysis_Output : MonoBehaviour
 {
     string myFilePath;
-	public string ParticipantId;
-    public int age;
-    public string gender;
+	string ParticipantId;
+    int age;
+    string gender;
     string date;
     int duplicate=1;
 
     ResponseAnalyzer responseAnalyzer;
 	StreamWriter fileWriter;
+    Txt_Output txt_Output;
 
     void Awake()
     {
         responseAnalyzer = GameObject.Find("XR Origin (XR Rig)").GetComponent<ResponseAnalyzer>();
+        txt_Output = GetComponent<Txt_Output>();
 
     }
     // Start is called before the first frame update
     void Start()
     {
+        ParticipantId = txt_Output.ParticipantId;
+        age = txt_Output.age;
+        gender = txt_Output.gender;
         date = DateTime.Now.ToString();
 
 
@@ -72,22 +77,22 @@ public class Analysis_Output : MonoBehaviour
                 "Time to Spare (s): " + "\t\t\t\t\t\t" + responseAnalyzer.ResponseAnalysis[key][15].ToString("F4") + "\n\n" +
                 "Gaps Seen (Actual): " + "\t");
 
-                foreach(float value in responseAnalyzer.GapsSeenActual[key])
-                {
-                    stringBuilder.Append(
-                        value.ToString("F4") + " | "
-                    );
-                }
-                stringBuilder.Append("\n" +
-                "Gaps Seen (Rounded): " + "\t");
+            foreach(float value in responseAnalyzer.GapsSeenActual[key])
+            {
+                stringBuilder.Append(
+                    value.ToString("F4") + " | "
+                );
+            }
+            stringBuilder.Append("\n" +
+            "Gaps Seen (Rounded): " + "\t");
 
-                foreach(float value in responseAnalyzer.GapsSeenRounded[key])
-                {
-                    stringBuilder.Append(
-                        value.ToString("F1") + " | "
-                    );
-                }
-                stringBuilder.Append("\n\n");
+            foreach(float value in responseAnalyzer.GapsSeenRounded[key])
+            {
+                stringBuilder.Append(
+                    value.ToString("F1") + " | "
+                );
+            }
+            stringBuilder.Append("\n\n");
 
         }
 

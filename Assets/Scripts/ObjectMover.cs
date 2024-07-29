@@ -70,10 +70,10 @@ public class ObjectMover : MonoBehaviour
 
         if(gameObject.tag == "TailCar" && carXPos >= midPoint)
         {
-            gameObject.tag = "ClonedCar";
             responseAnalyzer.timingEnded = false;
             responseAnalyzer.timingInitiated = false;
             responseAnalyzer.tagged = false;
+            carSpawner.rightTriggerPressed = false;
         }
 
         if(carSpawner.trialNum == carSpawner.trialCount)
