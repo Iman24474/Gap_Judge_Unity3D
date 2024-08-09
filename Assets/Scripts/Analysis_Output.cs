@@ -76,6 +76,10 @@ public class Analysis_Output : MonoBehaviour
                 "Lead Gap RT (s): " + "\t\t\t\t\t\t" + responseAnalyzer.ResponseAnalysis[key][7].ToString("F4") + "\n" +
                 "Time to Spare (s): " + "\t\t\t\t\t\t" + responseAnalyzer.ResponseAnalysis[key][15].ToString("F4") + "\n\n" +
                 "Gaps Seen (Actual): " + "\t");
+                Debug.Log(responseAnalyzer.ResponseAnalysis[key].Count);
+                Debug.Log(responseAnalyzer.ResponseAnalysis[key][7]);
+                Debug.Log(responseAnalyzer.ResponseAnalysis[key][15]);
+                Debug.Log(responseAnalyzer.ResponseAnalysis[key][16]);
 
             foreach(float value in responseAnalyzer.GapsSeenActual[key])
             {
