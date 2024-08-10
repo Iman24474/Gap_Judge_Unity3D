@@ -30,7 +30,6 @@ public class ObjectMover : MonoBehaviour
         color2 = GetComponent<MeshRenderer>().materials[1].color;
         waitTime = carSpawner.waitTime;
         responseAnalyzer.gapsGeneratedActual.Add(carSpawner.elapsedTime);
-        Debug.Log("Gap: " + waitTime);
     }
 
     // Update is called once per frame
@@ -68,22 +67,14 @@ public class ObjectMover : MonoBehaviour
             dataRecording = false;
         }
 
-        if(gameObject.tag == "TailCar" && carXPos >= midPoint)
-        {
-            responseAnalyzer.timingEnded = false;
-            responseAnalyzer.timingInitiated = false;
-            responseAnalyzer.tagged = false;
-            carSpawner.rightTriggerPressed = false;
-        }
-
         if(carSpawner.trialNum == carSpawner.trialCount)
         {
-            carSpawner.newTrial = false;
+            carSpawner.start = false;
         }
         else
         {
             // start a new trial
-            carSpawner.newTrial = true;
+            carSpawner.start = true;
         }
 
         // Move the gameobject forward along the x-axis

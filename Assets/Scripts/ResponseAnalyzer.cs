@@ -48,6 +48,7 @@ public class ResponseAnalyzer : MonoBehaviour
 
         if (tagged && !timingInitiated && (Input.GetKeyDown(KeyCode.P) || OVRInput.Get(OVRInput.RawButton.RIndexTrigger)))
         {
+            Debug.Log("Button Pressed (Time of Entry)");
             btnState = 1; // meaning btn is pressed (initial state)
 
             float leadCarX = leadCar.transform.position.x;
@@ -76,11 +77,16 @@ public class ResponseAnalyzer : MonoBehaviour
 
             gapsGeneratedRounded = new List<float>();
             gapsGeneratedActual = new List<float>();
+
             timingInitiated = true;
+            carSpawner.paused = true;
+            timingEnded = false;
+            
         }
 
         if(tagged && !timingEnded && (Input.GetKeyUp(KeyCode.P) || OVRInput.GetUp(OVRInput.RawButton.RIndexTrigger)))
         {
+            Debug.Log("Button Released (Time to Spare)");
             btnState = 3; // meaning btn is released (final state)
 
             float leadCarX = leadCar.transform.position.x;
@@ -103,6 +109,11 @@ public class ResponseAnalyzer : MonoBehaviour
             ResponseAnalysis[carSpawner.trialNum].Add(btnHoldTime);
 
             timingEnded = true;
+            carSpawner.paused = false;
+            tagged = false;
+            timingInitiated = false;
+            carSpawner.rightTriggerPressed = false;
+
         }
 
     }
@@ -116,7 +127,7 @@ public class ResponseAnalyzer : MonoBehaviour
         float tailCarDist = 2000; // All cars are instantiated at a distance of 125 
         float leadCarDist = -2000;
 
-        if(!tagged && carSpawner.rightTriggerPressed)
+        if(!tagged && carSpawner.rightTriggerPressed && !carSpawner.paused)
         {
             foreach(GameObject car in clonedCars)
             {

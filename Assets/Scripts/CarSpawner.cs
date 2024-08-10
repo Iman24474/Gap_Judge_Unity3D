@@ -15,7 +15,8 @@ public class CarSpawner : MonoBehaviour
     public float carCreationDelay;
     float delay;
     bool firstCar = true;
-    [HideInInspector] public bool newTrial = false;
+    [HideInInspector] public bool paused;
+    [HideInInspector] public bool start = false;
     bool activeResponse;
     [HideInInspector] public bool rightTriggerPressed;
     [HideInInspector] public float waitTime;
@@ -27,14 +28,12 @@ public class CarSpawner : MonoBehaviour
     [HideInInspector] public float trialNum;
 
     [HideInInspector] public Dictionary<float, List<List<float>>> CarInfo = new Dictionary<float, List<List<float>>>();
-    ResponseAnalyzer responseAnalyzer;
 
 
     // Start is called before the first frame update
     void Start()
     {
         playerRight = new HapticClipPlayer(hapticClip);
-        responseAnalyzer = GameObject.Find("XR Origin (XR Rig)").GetComponent<ResponseAnalyzer>();
         delay = carCreationDelay;
 
     }
@@ -47,7 +46,7 @@ public class CarSpawner : MonoBehaviour
         delay -= Time.deltaTime;
         elapsedTime += Time.deltaTime;
 
-        if(Input.GetKeyDown(KeyCode.S) || newTrial)
+        if((Input.GetKeyDown(KeyCode.S) || start) && !paused)
         {
             if(delay <= 0)
             {
@@ -117,7 +116,7 @@ public class CarSpawner : MonoBehaviour
             waitTime = gaps[Random.Range(0, gaps.Length)];
 
             firstCar = false;
-            newTrial = true;
+            start = true;
 
             // Increment the car entity ID
             selectedPrefab.GetComponent<CarEntity>().entityID++;
